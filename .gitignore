@@ -1,6 +1,0 @@
-# Исключаем файлы датасета для классификации типов цветов
-flower_data/
-flower_data/*.csv
-flower_data/*.json
-flower_data/*.jpg
-flower_data/*.png
