@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.route('/status', methods=['GET'])
 def get_statuses():
-    status_codes = request.args.getlist('code')  # Получаем список кодов статусов из параметров запроса
+    status_codes = request.args.getlist('code') 
     results = []
 
     for code in status_codes:
