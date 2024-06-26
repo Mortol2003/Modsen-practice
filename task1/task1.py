@@ -20,17 +20,27 @@ def image_hash(image):
     hash_val = sum(1 << (i + 8*j) for j, row in enumerate(resized) for i, value in enumerate(row) if value > avg)
     return hashlib.md5(hash_val.to_bytes(8, byteorder='big')).hexdigest()
 
-def find_duplicates(folder):
-    images = load_images_from_folder(folder)
+def find_duplicates(folder1, folder2=None):
+    images1 = load_images_from_folder(folder1)
+    images2 = load_images_from_folder(folder2) if folder2 else []
+
     hashes = {}
     duplicates = []
 
-    for path, img in images:
+    for path, img in images1:
         hash_val = image_hash(img)
         if hash_val in hashes:
             duplicates.append((hashes[hash_val], path))
         else:
             hashes[hash_val] = path
+
+    if folder2:
+        for path, img in images2:
+            hash_val = image_hash(img)
+            if hash_val in hashes:
+                duplicates.append((hashes[hash_val], path))
+            else:
+                hashes[hash_val] = path
 
     return duplicates
 
@@ -38,12 +48,21 @@ if __name__ == "__main__":
     root_folder = r'C:\Student\practik\task1\Modsen-practice\task1\5 Flower Types Classification Dataset'
 
     all_duplicates = []
+
+ 
     for subdir in os.listdir(root_folder):
         folder_path = os.path.join(root_folder, subdir)
         if os.path.isdir(folder_path):
             duplicates = find_duplicates(folder_path)
             if duplicates:
                 all_duplicates.extend(duplicates)
+
+    
+    folder1 = r'C:\Student\practik\task1\Modsen-practice\task1\folder1'
+    folder2 = r'C:\Student\practik\task1\Modsen-practice\task1\folder2'
+    duplicates_between_folders = find_duplicates(folder1, folder2)
+    if duplicates_between_folders:
+        all_duplicates.extend(duplicates_between_folders)
 
     if all_duplicates:
         print("Duplicates found:")
