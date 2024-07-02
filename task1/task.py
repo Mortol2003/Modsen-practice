@@ -3,23 +3,37 @@ import cv2
 import hashlib
 import numpy as np
 
+import os
+import cv2
+import hashlib
+import numpy as np
+
 def load_images_from_folder(folder):
     images = []
-    for root, _, files in os.walk(folder):
-        for filename in files:
-            path = os.path.join(root, filename)
-            if os.path.isfile(path) and filename.lower().endswith(('.png', '.jpg', '.jpeg')):
-                img = cv2.imread(path)
-                if img is not None:
-                    images.append((path, img))
+    try:
+        for root, _, files in os.walk(folder):
+            for filename in files:
+                path = os.path.join(root, filename)
+                if os.path.isfile(path) and filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+                    img = cv2.imread(path)
+                    if img is not None:
+                        images.append((path, img))
+    except Exception as e:
+        print(f"Error loading images from {folder}: {str(e)}")
     return images
 
 def image_hash(image):
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    resized = cv2.resize(image, (8, 8), interpolation=cv2.INTER_AREA)
-    avg = resized.mean()
-    hash_val = sum(1 << (i + 8*j) for j, row in enumerate(resized) for i, value in enumerate(row) if value > avg)
-    return hashlib.md5(hash_val.to_bytes((hash_val.bit_length() + 7) // 8, byteorder='big')).hexdigest()
+    try:
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        resized = cv2.resize(image, (8, 8), interpolation=cv2.INTER_AREA)
+        avg = resized.mean()
+        hash_val = sum(1 << (i + 8*j) for j, row in enumerate(resized) for i, value in enumerate(row) if value > avg)
+        return hashlib.md5(hash_val.to_bytes((hash_val.bit_length() + 7) // 8, byteorder='big')).hexdigest()
+    except Exception as e:
+        print(f"Error hashing image: {str(e)}")
+        return None
+
+# Остальная часть кода остается без изменений
 
 def find_duplicates(folder1, folder2=None):
     images1 = load_images_from_folder(folder1)
