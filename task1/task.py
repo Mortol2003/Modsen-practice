@@ -33,7 +33,7 @@ def image_hash(image):
         print(f"Error hashing image: {str(e)}")
         return None
 
-# Остальная часть кода остается без изменений
+
 
 def find_duplicates(folder1, folder2=None):
     images1 = load_images_from_folder(folder1)
