@@ -1,6 +1,5 @@
 ##http://127.0.0.1:5000/status/403
 ##http://127.0.0.1:5000/status?code=200&code=404&code=500
-##http://127.0.0.1:5000/status/403
 from flask import Flask, jsonify, request
 import requests
 
